@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "adc.h": "c",
+        "e2prom.h": "c",
+        "ev1527.h": "c",
+        "button.h": "c",
+        "light.h": "c",
+        "soft_timer.h": "c",
+        "protocol.h": "c"
+    }
+}
