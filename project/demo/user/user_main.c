@@ -1,53 +1,52 @@
 /**
   *****************************************************************************
-  * @file    : pwm.h
+  * @file    : user_main.c
   * @author  : Tuu
   * @version : 1.0.0
   * @date    : 2021-03-13
-  * @brief   : Header for pwm.c module
+  * @brief   : user app code start
   ******************************************************************************
   * @lasteditors  : Tuu
   * @lasteditTime : 2021-03-13
   ******************************************************************************
   * @atten   : Copyright (C) by Tuu Inc
   *
+  * this is user app demo start
   *****************************************************************************
   */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __PWM_H
-#define __PWM_H
-
-/* Includes ------------------------------------------------------------------*/
-#include "type.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* Includes -------------------------------------------------------------------*/
 
 /* Defines --------------------------------------------------------------------*/
-typedef unsigned char PWM_ID;
-#define PWM_1      0
-#define PWM_2      1
-#define PWM_3      2
-#define PWM_4      3
-#define PWM_5      4
-#define PWM_6      5
-#define PWM_7      6
-#define PWM_8      7
 
 /* Variables ------------------------------------------------------------------*/
 
-
 /* Functions ------------------------------------------------------------------*/
-void pwm_hw_init(PWM_ID id, uint16_t period);
-void pwm_change_duty(PWM_ID id, uint16_t duty);
+static int user_init(void)
+{
 
-#ifdef __cplusplus
+    return 0;
 }
-#endif
 
-#endif /* __PWM_H */
+
+/**
+  * @note   user_main
+  * @brief  None
+  * @param  None
+  * @retval None
+  */
+int user_main(void *p)
+{
+    user_init();
+
+    while(1){
+
+    }
+
+    return 0;
+}
+
+
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/
 

@@ -17,6 +17,9 @@
 /* Includes -------------------------------------------------------------------*/
 #include "main.h"
 
+#include "rcc.h"
+#include "uart.h"
+
 /* Defines --------------------------------------------------------------------*/
 
 
@@ -37,11 +40,19 @@ int main(void)
     /* stc8 系统配置 */
 
     // 时钟
+#ifndef LOW_POWER
+    rcc_hw_init(RCC_DEV_24M);
+#else
+    rcc_hw_init(RCC_DEV_32_7K);
+#endif
 
     // 串口打印
+    uart_hw_init(UART_1, 115200);
 
     // others
-    user_main(0);
+    user_main(NULL);
+
+    return 0;
 }
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/

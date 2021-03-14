@@ -19,19 +19,26 @@
 #define __ADC_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "type.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Defines --------------------------------------------------------------------*/
-
+typedef unsigned char ADC_ID;
+#define ADC_0      0
+#define ADC_1      1
+#define ADC_2      2
+#define ADC_3      3
+#define ADC_4      4
 
 /* Variables ------------------------------------------------------------------*/
 
 
 /* Functions ------------------------------------------------------------------*/
-
+void adc_hw_init(ADC_ID id);
+uint16_t get_adc_result(ADC_ID id);
 
 #ifdef __cplusplus
 }

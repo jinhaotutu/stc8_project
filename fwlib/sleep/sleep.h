@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    : e2prom.h
+  * @file    : sleep.h
   * @author  : Tuu
   * @version : 1.0.0
   * @date    : 2021-03-13
-  * @brief   : Header for e2prom.c module
+  * @brief   : Header for sleep.c module
   ******************************************************************************
   * @lasteditors  : Tuu
   * @lasteditTime : 2021-03-13
@@ -15,11 +15,10 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __E2PROM_H
-#define __E2PROM_H
+#ifndef __SLEEP_H
+#define __SLEEP_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "type.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,16 +31,13 @@ extern "C" {
 
 
 /* Functions ------------------------------------------------------------------*/
-void e2prom_hw_init(void);
-void e2prom_read(u16 addr, u8 *buf, u16 len);
-u8 e2prom_write(u16 addr, u8 *buf, u16 len);
-
+void sys_enter_sleep(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __E2PROM_H */
+#endif /* __SLEEP_H */
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/
 

@@ -19,18 +19,24 @@
 #define __HW_TIMER_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "type.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Defines --------------------------------------------------------------------*/
+typedef unsigned char TIMER_ID;
+#define TIMER_0      0
+#define TIMER_1      1
 
+typedef void (*TIMER_HANDER)(void *p);
 
 /* Variables ------------------------------------------------------------------*/
 
 
 /* Functions ------------------------------------------------------------------*/
+void hw_timer_init(TIMER_ID id, uint16_t tick_ms, TIMER_HANDER hander);
 
 
 #ifdef __cplusplus

@@ -19,6 +19,9 @@
 #define __MAIN_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "stdio.h"
+#include "string.h"
+// #include "stdarg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +36,17 @@ extern "C" {
 
 
 /* Defines --------------------------------------------------------------------*/
+#if 0
+#ifndef __FILENAME__
+#ifdef __GNUC__
+#define __FILENAME__ (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1):__FILE__)
+#else
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? (strrchr(__FILE__, '\\') + 1):__FILE__)
+#endif
+#endif
+
+#define tt_printf(_fmt_, ...) printf("[log ] %s:%d | "_fmt_"\r\n", __FILENAME__, __LINE__, __VA_ARGS__)
+#endif
 
 
 /* Variables ------------------------------------------------------------------*/

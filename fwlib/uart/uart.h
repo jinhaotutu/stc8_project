@@ -19,19 +19,23 @@
 #define __UART_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "type.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Defines --------------------------------------------------------------------*/
-
+typedef unsigned char UART_ID;
+#define UART_1      0
+#define UART_2      1
 
 /* Variables ------------------------------------------------------------------*/
 
 
 /* Functions ------------------------------------------------------------------*/
-
+void uart_hw_init(UART_ID num, uint8_t band);
+void print_str(uint8_t *puts);
 
 #ifdef __cplusplus
 }
