@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    : hw_timer.h
+  * @file    : kv_flash.h
   * @author  : Tuu
   * @version : 1.0.0
   * @date    : 2021-03-13
-  * @brief   : Header for hw_timer.c module
+  * @brief   : Header for kv_flash.c module
   ******************************************************************************
   * @lasteditors  : Tuu
   * @lasteditTime : 2021-03-13
@@ -15,35 +15,35 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __HW_TIMER_H
-#define __HW_TIMER_H
+#ifndef __KV_FLASH_H
+#define __KV_FLASH_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "type.h"
+#include "e2prom.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Defines --------------------------------------------------------------------*/
-typedef unsigned char TIMER_ID;
-#define TIMER_0      0
-#define TIMER_1      1
+#define TINY_START_ADDR  0x0000        //tinyFlash起始地址
+#define TINY_SECTOR_SIZE E2PROM_BLOCK   //flash扇区大小
+#define TINY_BUFFER_SIZE 128            //tiny缓冲区大小
 
-typedef void (*TIMER_HANDER)(void *p);
+#define TINY_SECHAD_SIZE 32             //记录扇区使用情况的扇区头大小
 
 /* Variables ------------------------------------------------------------------*/
 
 
 /* Functions ------------------------------------------------------------------*/
-void hw_timer_init(TIMER_ID id, uint32_t tick_us, TIMER_HANDER hander);
-void hw_timer_stop(TIMER_ID id);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __HW_TIMER_H */
+#endif /* __KV_FLASH_H */
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/
 

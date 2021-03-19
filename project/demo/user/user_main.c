@@ -16,6 +16,9 @@
   */
 
 /* Includes -------------------------------------------------------------------*/
+#include "type.h"
+#include "soft_timer.h"
+#include "button.h"
 
 /* Defines --------------------------------------------------------------------*/
 
@@ -24,6 +27,11 @@
 /* Functions ------------------------------------------------------------------*/
 static int user_init(void)
 {
+    int ret = 0;
+
+    soft_timer_init();
+
+    button_init();
 
     return 0;
 }
@@ -40,10 +48,11 @@ int user_main(void *p)
     user_init();
 
     while(1){
-
+        // soft timer
+        soft_timer_loop();
     }
 
-    return 0;
+    //return 0;
 }
 
 

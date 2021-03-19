@@ -18,7 +18,6 @@
 #include "sleep.h"
 
 #include "STC8HX.h"
-#include "intrins.h"
 
 /* Defines --------------------------------------------------------------------*/
 #define EX2 0x10

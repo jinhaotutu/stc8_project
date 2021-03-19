@@ -29,8 +29,12 @@ static TIMER_HANDER timer0_hander = NULL;
 static TIMER_HANDER timer1_hander = NULL;
 
 /* Functions ------------------------------------------------------------------*/
+static void Timer0_stop(void)
+{
+    TR0 = 0;    //停止计数
+}
 
-static void Timer0_init(uint16_t tick_ms)
+static void Timer0_init(uint32_t tick_us)
 {
     uint32_t tick_clk = 0;
 
@@ -45,39 +49,7 @@ static void Timer0_init(uint16_t tick_ms)
 //  INT_CLKO |=  0x01;  //输出时钟
     INT_CLKO &= ~0x01;  //不输出时钟
 
-    tick_clk = MAIN_Fosc/tick_ms;
-    if (tick_clk < 0xffff)
-    {
-        AUXR |=  0x40;  //1T mode
-        TH1 = (u8)((65536UL - tick_clk) / 256);
-        TL1 = (u8)((65536UL - tick_clk) % 256);
-    }
-    else
-    {
-        AUXR &= ~0x40;  //12T mode
-        TH1 = (u8)((65536UL - tick_clk/12) / 256);
-        TL1 = (u8)((65536UL - tick_clk/12) % 256);
-    }
-
-    TR1 = 1;    //开始运行
-}
-
-static void Timer1_init(uint16_t tick_ms)
-{
-    uint32_t tick_clk;
-
-    TR1 = 0;    //停止计数
-
-    ET1 = 1;    //允许中断
-//  PT1 = 1;    //高优先级中断
-    TMOD &= ~0x30;
-    TMOD |= (0 << 4);   //工作模式, 0: 16位自动重装, 1: 16位定时/计数, 2: 8位自动重装
-//  TMOD |=  0x40;  //对外计数或分频
-    TMOD &= ~0x40;  //定时
-//  INT_CLKO |=  0x02;  //输出时钟
-    INT_CLKO &= ~0x02;  //不输出时钟
-
-    tick_clk = MAIN_Fosc/tick_ms;
+    tick_clk = MAIN_Fosc/1000000*tick_us;
     if (tick_clk < 0xffff)
     {
         AUXR |=  0x80;  //1T mode
@@ -94,20 +66,78 @@ static void Timer1_init(uint16_t tick_ms)
     TR0 = 1;    //开始运行
 }
 
-void hw_timer_init(TIMER_ID id, uint16_t tick_ms, TIMER_HANDER hander)
+static void Timer1_stop(void)
+{
+    TR1 = 0;    //停止计数
+}
+
+static void Timer1_init(uint32_t tick_us)
+{
+    uint32_t tick_clk;
+
+    TR1 = 0;    //停止计数
+
+    ET1 = 1;    //允许中断
+//  PT1 = 1;    //高优先级中断
+    TMOD &= ~0x30;
+    TMOD |= (0 << 4);   //工作模式, 0: 16位自动重装, 1: 16位定时/计数, 2: 8位自动重装
+//  TMOD |=  0x40;  //对外计数或分频
+    TMOD &= ~0x40;  //定时
+//  INT_CLKO |=  0x02;  //输出时钟
+    INT_CLKO &= ~0x02;  //不输出时钟
+
+    tick_clk = MAIN_Fosc/1000000*tick_us;
+    if (tick_clk < 0xffff)
+    {
+        AUXR |=  0x40;  //1T mode
+        TH1 = (u8)((65536UL - tick_clk) / 256);
+        TL1 = (u8)((65536UL - tick_clk) % 256);
+    }
+    else
+    {
+        AUXR &= ~0x40;  //12T mode
+        TH1 = (u8)((65536UL - tick_clk/12) / 256);
+        TL1 = (u8)((65536UL - tick_clk/12) % 256);
+    }
+
+    TR1 = 1;    //开始运行
+}
+
+void hw_timer_init(TIMER_ID id, uint32_t tick_us, TIMER_HANDER hander)
 {
     switch (id)
     {
         case TIMER_0:
             /* code */
-            Timer0_init(tick_ms);
+            Timer0_init(tick_us);
             timer0_hander = hander;
             break;
 
         case TIMER_1:
             /* code */
-            Timer1_init(tick_ms);
+            Timer1_init(tick_us);
             timer1_hander = hander;
+            break;
+
+        default:
+            break;
+    }
+}
+
+void hw_timer_stop(TIMER_ID id)
+{
+    switch (id)
+    {
+        case TIMER_0:
+            /* code */
+            Timer0_stop();
+            timer0_hander = NULL;
+            break;
+
+        case TIMER_1:
+            /* code */
+            Timer1_stop();
+            timer1_hander = NULL;
             break;
 
         default:

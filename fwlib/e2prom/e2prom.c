@@ -18,7 +18,6 @@
 #include "e2prom.h"
 
 #include "STC8HX.h"
-#include "intrins.h"
 
 /* Defines --------------------------------------------------------------------*/
 #define     IAP_STANDBY()   IAP_CMD = 0     //IAP空闲命令（禁止）
@@ -33,8 +32,6 @@
 #define     IAP_SWBS        (1<<6)
 #define     IAP_SWRST       (1<<5)
 #define     IAP_CMD_FAIL    (1<<4)
-
-#define     E2PROM_BLOCK    512
 
 /* Variables ------------------------------------------------------------------*/
 

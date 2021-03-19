@@ -19,6 +19,8 @@
 #define __LIGHT_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "type.h"
+#include "gpio.h"
 
 #ifdef __cplusplus
 extern "C" {

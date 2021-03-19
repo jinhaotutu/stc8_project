@@ -18,7 +18,6 @@
 #include "adc.h"
 
 #include "STC8HX.h"
-#include "intrins.h"
 
 /* Defines --------------------------------------------------------------------*/
 #define ADC_TRANS_CNT   16
