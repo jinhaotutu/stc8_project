@@ -40,22 +40,22 @@ void gpio_hw_init(GPIO_GROUP group, GPIO_PIN pin, GPIO_DIC dic)
         {
             case GROUP_0:
                 /* code */
-                P0M0 = 0x01 << pin;
+                P0M0 |= 0x01 << pin;
                 P0M1 = 0;
                 break;
             case GROUP_1:
                 /* code */
-                P1M0 = 0x01 << pin;
+                P1M0 |= 0x01 << pin;
                 P1M1 = 0;
                 break;
             case GROUP_2:
                 /* code */
-                P2M0 = 0x01 << pin;
+                P2M0 |= 0x01 << pin;
                 P2M1 = 0;
                 break;
             case GROUP_3:
                 /* code */
-                P3M0 = 0x01 << pin;
+                P3M0 |= 0x01 << pin;
                 P3M1 = 0;
                 break;
 
@@ -70,22 +70,22 @@ void gpio_hw_init(GPIO_GROUP group, GPIO_PIN pin, GPIO_DIC dic)
             case GROUP_0:
                 /* code */
                 P0M0 = 0;
-                P0M1 = 0x01 << pin;
+                P0M1 |= 0x01 << pin;
                 break;
             case GROUP_1:
                 /* code */
                 P1M0 = 0;
-                P1M1 = 0x01 << pin;
+                P1M1 |= 0x01 << pin;
                 break;
             case GROUP_2:
                 /* code */
                 P2M0 = 0;
-                P2M1 = 0x01 << pin;
+                P2M1 |= 0x01 << pin;
                 break;
             case GROUP_3:
                 /* code */
                 P3M0 = 0;
-                P3M1 = 0x01 << pin;
+                P3M1 |= 0x01 << pin;
                 break;
 
             default:
@@ -131,19 +131,19 @@ u8 gpio_read(GPIO_GROUP group, GPIO_PIN pin)
     {
         case GROUP_0:
             /* code */
-            value = P0 & (0x01 << pin);
+            value = (P0 >> pin) & 0x01;
             break;
         case GROUP_1:
             /* code */
-            value = P1 & (0x01 << pin);
+            value = (P1 >> pin) & 0x01;
             break;
         case GROUP_2:
             /* code */
-            value = P2 & (0x01 << pin);
+            value = (P2 >> pin) & 0x01;
             break;
         case GROUP_3:
             /* code */
-            value = P3 & (0x01 << pin);
+            value = (P3 >> pin) & 0x01;
             break;
 
         default:

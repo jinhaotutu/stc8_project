@@ -18,6 +18,7 @@
 #include "e2prom.h"
 
 #include "STC8HX.h"
+#include "intrins.h"
 
 /* Defines --------------------------------------------------------------------*/
 #define     IAP_STANDBY()   IAP_CMD = 0     //IAP空闲命令（禁止）
@@ -25,7 +26,7 @@
 #define     IAP_WRITE()     IAP_CMD = 2     //IAP写入命令
 #define     IAP_ERASE()     IAP_CMD = 3     //IAP擦除命令
 
-#define     IAP_ENABLE()    IAP_CONTR = IAP_EN; IAP_TPS = MAIN_Fosc / 1000000
+#define     IAP_ENABLE()    IAP_CONTR = IAP_EN; IAP_TPS = (MAIN_Fosc / 1000000)
 #define     IAP_DISABLE()   IAP_CONTR = 0; IAP_CMD = 0; IAP_TRIG = 0; IAP_ADDRH = 0xff; IAP_ADDRL = 0xff
 
 #define     IAP_EN          (1<<7)
@@ -69,6 +70,7 @@ static void EEPROM_Trig(void)
     IAP_TRIG = 0xA5;                    //先送5AH，再送A5H到IAP触发寄存器，每次都需要如此
                                         //送完A5H后，IAP命令立即被触发启动
                                         //CPU等待IAP完成后，才会继续执行程序。
+    _nop_();
     _nop_();
     _nop_();
     EA = F0;    //恢复全局中断
@@ -131,9 +133,9 @@ static void EEPROM_read_n(u16 EE_address,u8 *DataAddress,u8 length)
 //========================================================================
 static u8 EEPROM_write_n(u16 EE_address,u8 *DataAddress,u8 length)
 {
-    u8  i;
-    u16 j;
-    u8  *p;
+    static u8  i;
+    static u16 j;
+    static u8  *p;
 
     if(length == 0) return 1;   //长度为0错误
 
@@ -187,17 +189,12 @@ void e2prom_read(u16 addr, u8 *buf, u16 len)
 
 u8 e2prom_write(u16 addr, u8 *buf, u16 len)
 {
-    u8 i = 0;
-
-    if (len == 0)
+    if (len == 0 || len > 512)
     {
         return 1;
     }
 
-    for (i=0;i<((len-1)/E2PROM_BLOCK+1);i++)
-    {
-        EEPROM_SectorErase(addr+i*E2PROM_BLOCK);
-    }
+    EEPROM_SectorErase(addr);
 
     return EEPROM_write_n(addr, buf, len);
 }

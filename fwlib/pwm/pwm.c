@@ -50,7 +50,7 @@ static void pwma_config(PWM_ID id, uint16_t period)
 {
     P_SW2 |= 0x80;
 
-    // PWM1_BKR = 0x00; //使能主输出
+    // PWM1_BKR = 0x00;
 
     PWM1_CCER1 = 0x00; //写 CCMRx 前必须先清零 CCxE 关闭通道
     PWM1_CCER2 = 0x00;
@@ -61,9 +61,11 @@ static void pwma_config(PWM_ID id, uint16_t period)
     PWM1_CCER1 = 0x55; //配置通道输出使能和极性
     PWM1_CCER2 = 0x55;
 
+    PWM1_PSCRH = (u8)(MAIN_Fosc/1000000-1)>>8;
+    PWM1_PSCRL = (u8)(MAIN_Fosc/1000000-1)&0xff;
 
-    PWM1_ARRH = (u8)(period >> 8); //设置周期时间
-    PWM1_ARRL = (u8)(period);
+    PWM1_ARRH = (u8)((period-1) >> 8); //设置周期时间
+    PWM1_ARRL = (u8)(period-1);
 
     // PWM1_ENO = 0x00;
     // PWM1_PS = 0x00;  //高级 PWM 通道输出脚选择位
@@ -100,6 +102,7 @@ static void pwma_config(PWM_ID id, uint16_t period)
     }
 
     PWM1_BKR = 0x80; //使能主输出
+    PWM1_CR1 &= ~(0x60);
     PWM1_CR1 |= 0x01; //开始计时
     P_SW2 &= 0x7f;
 }
@@ -112,23 +115,23 @@ static void pwma_duty(PWM_ID id, uint16_t duty)
     {
         case PWM_1:
             /* code */
-            PWM1_CCR1H = (u8)(duty >> 8); //设置占空比时间
-            PWM1_CCR1L = (u8)(duty);
+            PWM1_CCR1H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM1_CCR1L = (u8)((duty-1));
             break;
         case PWM_2:
             /* code */
-            PWM1_CCR2H = (u8)(duty >> 8); //设置占空比时间
-            PWM1_CCR2L = (u8)(duty);
+            PWM1_CCR2H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM1_CCR2L = (u8)((duty-1));
             break;
         case PWM_3:
             /* code */
-            PWM1_CCR3H = (u8)(duty >> 8); //设置占空比时间
-            PWM1_CCR3L = (u8)(duty);
+            PWM1_CCR3H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM1_CCR3L = (u8)((duty-1));
             break;
         case PWM_4:
             /* code */
-            PWM1_CCR4H = (u8)(duty >> 8); //设置占空比时间
-            PWM1_CCR4L = (u8)(duty);
+            PWM1_CCR4H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM1_CCR4L = (u8)((duty-1));
             break;
 
         default:
@@ -146,23 +149,23 @@ static void pwmb_duty(PWM_ID id, uint16_t duty)
     {
         case PWM_5:
             /* code */
-            PWM2_CCR1H = (u8)(duty >> 8); //设置占空比时间
-            PWM2_CCR1L = (u8)(duty);
+            PWM2_CCR1H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM2_CCR1L = (u8)((duty-1));
             break;
         case PWM_6:
             /* code */
-            PWM2_CCR2H = (u8)(duty >> 8); //设置占空比时间
-            PWM2_CCR2L = (u8)(duty);
+            PWM2_CCR2H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM2_CCR2L = (u8)((duty-1));
             break;
         case PWM_7:
             /* code */
-            PWM2_CCR3H = (u8)(duty >> 8); //设置占空比时间
-            PWM2_CCR3L = (u8)(duty);
+            PWM2_CCR3H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM2_CCR3L = (u8)((duty-1));
             break;
         case PWM_8:
             /* code */
-            PWM2_CCR4H = (u8)(duty >> 8); //设置占空比时间
-            PWM2_CCR4L = (u8)(duty);
+            PWM2_CCR4H = (u8)((duty-1) >> 8); //设置占空比时间
+            PWM2_CCR4L = (u8)((duty-1));
             break;
 
         default:
@@ -176,7 +179,7 @@ static void pwmb_config(PWM_ID id, uint16_t period)
 {
     P_SW2 |= 0x80;
 
-    // PWM2_BKR = 0x00; //使能主输出
+    // PWM2_BKR = 0x00;
 
     PWM2_CCER1 = 0x00; //写 CCMRx 前必须先清零 CCxE 关闭通道
     PWM2_CCER2 = 0x00;
@@ -184,11 +187,14 @@ static void pwmb_config(PWM_ID id, uint16_t period)
     PWM2_CCMR2 = 0x60;
     PWM2_CCMR3 = 0x60;
     PWM2_CCMR4 = 0x60;
-    PWM2_CCER1 = 0x33; //配置通道输出使能和极性
-    PWM2_CCER2 = 0x33;
+    PWM2_CCER1 = 0x11; //配置通道输出使能和极性
+    PWM2_CCER2 = 0x11;
 
-    PWM2_ARRH = period >> 8; //设置周期时间
-    PWM2_ARRL = period & 0xff;
+    PWM2_PSCRH = (MAIN_Fosc/1000000-1)>>8;
+    PWM2_PSCRL = (MAIN_Fosc/1000000-1)&0xff;
+
+    PWM2_ARRH = (period-1) >> 8; //设置周期时间
+    PWM2_ARRL = (period-1) & 0xff;
 
     // PWM2_ENO = 0x00;
     // PWM2_PS = 0x00;  //高级 PWM 通道输出脚选择位
@@ -221,6 +227,7 @@ static void pwmb_config(PWM_ID id, uint16_t period)
     }
 
     PWM2_BKR = 0x80; //使能主输出
+    PWM2_CR1 &= ~(0x60);
     PWM2_CR1 |= 0x01; //开始计时
     P_SW2 &= 0x7f;
 }

@@ -27,11 +27,13 @@ sfr INT_CLKO = 0x8F;
 
 static TIMER_HANDER timer0_hander = NULL;
 static TIMER_HANDER timer1_hander = NULL;
+static TIMER_HANDER timer3_hander = NULL;
 
 /* Functions ------------------------------------------------------------------*/
 static void Timer0_stop(void)
 {
     TR0 = 0;    //停止计数
+    // ET0 = 0;
 }
 
 static void Timer0_init(uint32_t tick_us)
@@ -103,6 +105,35 @@ static void Timer1_init(uint32_t tick_us)
     TR1 = 1;    //开始运行
 }
 
+static void Timer3_init(uint32_t tick_us)
+{
+    uint32_t tick_clk;
+
+    T4T3M &= ~0x0f;    //停止计数
+
+    IE2  |=  0x20;    //允许中断
+
+    tick_clk = MAIN_Fosc/1000000*tick_us;
+    if (tick_clk < 0xffff)
+    {
+        T4T3M |=  (1<<1);    //1T mode
+        T3H = (u8)((65536UL - tick_clk) / 256);
+        T3L = (u8)((65536UL - tick_clk) % 256);
+    }
+    else
+    {
+        T3H = (u8)((65536UL - tick_clk/12) / 256);
+        T3L = (u8)((65536UL - tick_clk/12) % 256);
+    }
+
+    T4T3M |=  (1<<3);    //开始运行
+}
+
+static void Timer3_stop(void)
+{
+    T4T3M &= ~0x0f;    //停止计数
+}
+
 void hw_timer_init(TIMER_ID id, uint32_t tick_us, TIMER_HANDER hander)
 {
     switch (id)
@@ -117,6 +148,12 @@ void hw_timer_init(TIMER_ID id, uint32_t tick_us, TIMER_HANDER hander)
             /* code */
             Timer1_init(tick_us);
             timer1_hander = hander;
+            break;
+
+        case TIMER_3:
+            /* code */
+            Timer3_init(tick_us);
+            timer3_hander = hander;
             break;
 
         default:
@@ -140,6 +177,12 @@ void hw_timer_stop(TIMER_ID id)
             timer1_hander = NULL;
             break;
 
+        case TIMER_3:
+            /* code */
+            Timer3_stop();
+            timer3_hander = NULL;
+            break;
+
         default:
             break;
     }
@@ -158,6 +201,14 @@ void timer1_int (void) interrupt 3
     if (NULL != timer1_hander)
     {
         timer1_hander(TIMER_1);
+    }
+}
+
+void timer3_int(void) interrupt 19
+{
+    if (NULL != timer3_hander)
+    {
+        timer3_hander(TIMER_3);
     }
 }
 

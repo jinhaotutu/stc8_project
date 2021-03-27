@@ -6,7 +6,11 @@
 //包含本头文件后,不用另外再包含"REG51.H"
 #include "intrins.h"
 
+#ifndef LOW_POWER
 #define     MAIN_Fosc       24000000L   //定义主时钟
+#else
+#define     MAIN_Fosc       32768L   //定义主时钟
+#endif
 
 sfr         P0          =           0x80;
 sbit        P00         =           P0^0;

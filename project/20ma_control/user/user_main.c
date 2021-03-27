@@ -1,72 +1,83 @@
 /**
   *****************************************************************************
-  * @file    : main.c
+  * @file    : user_main.c
   * @author  : Tuu
   * @version : 1.0.0
   * @date    : 2021-03-13
-  * @brief   : stc8 main
+  * @brief   : user app code start
   ******************************************************************************
   * @lasteditors  : Tuu
   * @lasteditTime : 2021-03-13
   ******************************************************************************
   * @atten   : Copyright (C) by Tuu Inc
   *
+  * this is user app demo start
   *****************************************************************************
   */
 
 /* Includes -------------------------------------------------------------------*/
-#include "main.h"
-#include "stdio.h"
+#include "type.h"
+#include "soft_timer.h"
+#include "button.h"
 
-#include "rcc.h"
+#include "control.h"
 #include "uart.h"
-#include "STC8HX.h"
+#include "stdio.h"
+#include "gpio.h"
+#include "ev1527.h"
+#include "hw_timer.h"
 
 /* Defines --------------------------------------------------------------------*/
 
-
 /* Variables ------------------------------------------------------------------*/
-
+static struct tk_timer timer_log;
 
 /* Functions ------------------------------------------------------------------*/
-extern int user_main(void *p);
+static void timer_log_handle(struct tk_timer *timer)
+{
+    print_str("system is runing\r\n");
+}
+
+static int user_init(void)
+{
+    int ret = 0;
+
+    soft_timer_init();
+    soft_timer_register(&timer_log, timer_log_handle);
+    soft_timer_start(&timer_log, TIMER_MODE_LOOP, 1000);
+
+    control_user_init();
+
+    print_str("user init finish\r\n");
+
+    return 0;
+}
+
 
 /**
-  * @note   Main program.
+  * @note   user_main
   * @brief  None
   * @param  None
   * @retval None
   */
-int main(void)
+int user_main(void *p)
 {
-    /* stc8 系统配置 */
-    // P0M1 = 0;   P0M0 = 0;   //设置为准双向口
-    // P1M1 = 0;   P1M0 = 0;   //设置为准双向口
-    // P2M1 = 0;   P2M0 = 0;   //设置为准双向口
-    // P3M1 = 0;   P3M0 = 0;   //设置为准双向口
-    // P4M1 = 0;   P4M0 = 0;   //设置为准双向口
-    // P5M1 = 0;   P5M0 = 0;   //设置为准双向口
-    // P6M1 = 0;   P6M0 = 0;   //设置为准双向口
-    // P7M1 = 0;   P7M0 = 0;   //设置为准双向口
+    print_str("user_main\r\n");
 
-    // 时钟
-#ifndef LOW_POWER
-    // rcc_hw_init(RCC_DEV_24M);
-#else
-    rcc_hw_init(RCC_DEV_32_7K);
-#endif
+    user_init();
 
-    // 串口打印
-    uart_hw_init(UART_1, 9600);
+    while(1){
+        // soft timer
+        soft_timer_loop();
 
-    print_str("main init succeed\r\n");
-    // printf("test printf out\n");
+        // user loop
+        control_loop();
+    }
 
-    // others
-    user_main(NULL);
-
-    return 0;
+    //return 0;
 }
+
+
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/
 

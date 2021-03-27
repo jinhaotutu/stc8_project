@@ -55,6 +55,8 @@ void rcc_hw_init(RCC_DIV div)
 
         case RCC_DEV_32_7K:
             /* code */
+            IRC32KCR = 0x80; //启动内部 32K IRC
+            while (!(IRC32KCR & 1)); //等待时钟稳定
             CLKDIV = 0;
             CKSEL = 0x03;               //选择内部 IRC ( 默认 )
             break;

@@ -26,11 +26,11 @@ extern "C" {
 #endif
 
 /* Defines --------------------------------------------------------------------*/
-#define FLEX_BTN_SCAN_FREQ_HZ 50 // How often flex_button_scan () is called
+#define FLEX_BTN_SCAN_FREQ_HZ (20) // How often flex_button_scan () is called
 #define FLEX_MS_TO_SCAN_CNT(ms) (ms / (1000 / FLEX_BTN_SCAN_FREQ_HZ))
 
 /* Multiple clicks interval, default 300ms */
-#define MAX_MULTIPLE_CLICKS_INTERVAL (FLEX_MS_TO_SCAN_CNT(300))
+#define MAX_MULTIPLE_CLICKS_INTERVAL (FLEX_MS_TO_SCAN_CNT(50))
 
 /* Variables ------------------------------------------------------------------*/
 typedef void (*flex_button_response_callback)(void*);
@@ -68,14 +68,15 @@ typedef struct flex_button
     uint16_t long_hold_start_tick;
 
     uint8_t id;
-    uint8_t pressed_logic_level : 1;
-    uint8_t event               : 4;
-    uint8_t status              : 3;
+    uint8_t pressed_logic_level;
+    uint8_t event;
+    uint8_t status;
 } flex_button_t;
 
 /* Functions ------------------------------------------------------------------*/
 int button_init(void);
 int button_register(flex_button_t *button);
+flex_button_event_t button_event(flex_button_t* button);
 
 #ifdef __cplusplus
 }

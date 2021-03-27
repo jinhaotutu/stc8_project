@@ -30,12 +30,14 @@ typedef unsigned char UART_ID;
 #define UART_1      0
 #define UART_2      1
 
+
 /* Variables ------------------------------------------------------------------*/
 
 
 /* Functions ------------------------------------------------------------------*/
-void uart_hw_init(UART_ID num, uint8_t band);
+void uart_hw_init(UART_ID num, uint32_t band);
 void print_str(uint8_t *puts);
+void print_hex(uint8_t *puts, uint8_t len);
 
 #ifdef __cplusplus
 }

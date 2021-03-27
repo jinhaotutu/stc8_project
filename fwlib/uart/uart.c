@@ -18,6 +18,7 @@
 #include "uart.h"
 
 #include "STC8HX.h"
+#include "stdio.h"
 
 /* Defines --------------------------------------------------------------------*/
 
@@ -59,7 +60,7 @@ static void uart2_config(void)
 
 }
 
-void uart_hw_init(UART_ID id, uint8_t band)
+void uart_hw_init(UART_ID id, uint32_t band)
 {
     AUXR |= 0x01;       //S1 BRT Use Timer2;
     SetTimer2Baudraye(65536UL - (MAIN_Fosc / 4) / band);
@@ -82,6 +83,7 @@ void uart_hw_init(UART_ID id, uint8_t band)
 
     EA = 1; //允许总中断
 
+    print_str("\r\n\r\n\r\n");
     print_str("log uart init succeed\r\n");
 }
 
@@ -94,6 +96,40 @@ void print_str(uint8_t *puts) //发送一个字符串
         while(B_TX1_Busy);
     }
 }
+
+void print_hex(uint8_t *puts, uint8_t len) //发送一个字符串
+{
+    u8 i=0;
+    for (i=0;i<len;i++)     //遇到停止符0结束
+    {
+        if ((*puts>>4) < 10)
+            SBUF = ((*puts>>4)+'0');
+        else
+            SBUF = ((*puts>>4)-10+'A');
+        B_TX1_Busy = 1;
+        while(B_TX1_Busy);
+
+        if ((*puts&0x0f) < 10)
+            SBUF = ((*puts&0x0f)+'0');
+        else
+            SBUF = ((*puts&0x0f)-10+'A');
+        B_TX1_Busy = 1;
+        while(B_TX1_Busy);
+        *puts++;
+    }
+
+    SBUF = '\n';
+    B_TX1_Busy = 1;
+    while(B_TX1_Busy);
+}
+
+// char putchar(char ch)
+// {
+//     SBUF = (u8)ch;
+//     B_TX1_Busy = 1;
+//     while(B_TX1_Busy);
+//     return ch;
+// }
 
 void UART1_int (void) interrupt 4
 {

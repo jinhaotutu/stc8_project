@@ -46,8 +46,11 @@ static struct tk_timer *tk_timer_head_node = NULL;
 static struct tk_timer *_tk_timer_find_node_tail(struct tk_timer *tk_timer_start_node)
 {
     //TK_ASSERT(tk_timer_start_node);
-    struct tk_timer *node_curr = tk_timer_start_node;
-    struct tk_timer *node_next = tk_timer_start_node;
+    static struct tk_timer *node_curr;
+    static struct tk_timer *node_next;
+
+    node_curr = tk_timer_start_node;
+    node_next = tk_timer_start_node;
     do
     {
         node_curr = node_next;
@@ -66,7 +69,8 @@ static struct tk_timer *_tk_timer_find_node_tail(struct tk_timer *tk_timer_start
 static bool _tk_timer_insert_node_to_list(struct tk_timer *tk_timer_node)
 {
     //TK_ASSERT(tk_timer_node);
-    struct tk_timer *node_tail = _tk_timer_find_node_tail(tk_timer_head_node);
+    static struct tk_timer *node_tail;
+    node_tail = _tk_timer_find_node_tail(tk_timer_head_node);
     node_tail->next = tk_timer_node;
     tk_timer_node->prev = node_tail;
     return true;
@@ -304,7 +308,7 @@ tk_timer_state tk_timer_get_state(struct tk_timer *timer)
  */
 bool tk_timer_loop_handler(void)
 {
-    struct tk_timer *timer = NULL;
+    static struct tk_timer *timer = NULL;
 
     if (tk_timer_head_node != NULL)
         timer = tk_timer_head_node->next;
@@ -337,7 +341,7 @@ bool tk_timer_loop_handler(void)
 }
 
 
-//user soft timer apiiuh
+//user soft timer api
 static uint32_t timer_tick = 0;
 
 void hw_timer_handle(void *p)
@@ -350,9 +354,14 @@ static uint32_t get_timer_tick(void)
     return timer_tick;
 }
 
-int soft_timer_init(void)
+int soft_timer_update(void)
 {
     hw_timer_init(TIMER_1, TIMER_TICK_US, hw_timer_handle);
+}
+
+int soft_timer_init(void)
+{
+    soft_timer_update();
 
     /* 初始化软件定时器功能，并配置tick获取回调函数*/
     return tk_timer_func_init(get_timer_tick);

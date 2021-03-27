@@ -23,7 +23,7 @@
 
 
 /* Variables ------------------------------------------------------------------*/
-
+static struct tk_timer btn_timer={0};
 
 /* Functions ------------------------------------------------------------------*/
 
@@ -327,9 +327,8 @@ static void btn_timer_loop(struct tk_timer *timer)
 
 int button_init(void)
 {
-    static struct tk_timer btn_timer={0};
     soft_timer_register(&btn_timer, btn_timer_loop);
-    soft_timer_start(&btn_timer, TIMER_MODE_LOOP, 1000000/TIMER_TICK_US/FLEX_BTN_SCAN_FREQ_HZ);
+    soft_timer_start(&btn_timer, TIMER_MODE_LOOP, 1000/FLEX_BTN_SCAN_FREQ_HZ);
 
     return true;
 }
@@ -339,7 +338,10 @@ int button_register(flex_button_t *button)
     return flex_button_register(button);
 }
 
-
+flex_button_event_t button_event(flex_button_t* button)
+{
+    return flex_button_event_read(button);
+}
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/
 

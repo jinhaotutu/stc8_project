@@ -33,9 +33,9 @@ extern "C" {
 typedef struct ev_data
 {
     /* data */
-    uint8_t id[20];
+    uint8_t id[8];
     uint8_t key[4];
-    uint8_t bit_cnt;
+    uint16_t bit_cnt;
 }ev_data;
 
 typedef u8 (*io_read)(void);
@@ -72,12 +72,12 @@ typedef struct ev_encode
     uint8_t loop_cnt;
     timer_restart restart;
     timer_stop stop;
+    uint8_t busy;
 }ev_encode;
 
 /* Functions ------------------------------------------------------------------*/
 int ev1527_decode_init(io_read read, ev_decode_handle handle);
 int ev1527_encode_post(io_write write, uint8_t *id, uint8_t id_len, uint8_t *key, uint8_t key_len);
-
 
 #ifdef __cplusplus
 }

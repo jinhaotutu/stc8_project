@@ -26,6 +26,8 @@ extern "C" {
 #endif
 
 /* Defines --------------------------------------------------------------------*/
+#define TK_TIMER_USING_TIMEOUT_CALLBACK
+
 #define TIMER_TICK_US  1000
 #define TK_ASSERT(EXPR) (void)EXPR
 
@@ -64,6 +66,7 @@ typedef struct tk_timer *tk_timer_t;
 // typedef void (*timeout_callback)(struct tk_timer *timer);
 
 /* Functions ------------------------------------------------------------------*/
+int soft_timer_update(void);
 int soft_timer_init(void);
 int soft_timer_loop(void);
 int soft_timer_register(struct tk_timer *timer, void (*timeout_callback)(struct tk_timer *timer));
