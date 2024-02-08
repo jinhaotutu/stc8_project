@@ -99,19 +99,19 @@ typedef struct led_info
 
 
 static const led_info motor_map[3]={
-    {GROUP_2, PIN_3, {0, 0, 1, 1}},
-    {GROUP_2, PIN_4, {0, 1, 0, 0}},
-    {GROUP_2, PIN_5, {0, 0, 1, 0}},
+    {GROUP_2, PIN_3, {0, 0, 0, 1}},
+    {GROUP_2, PIN_5, {0, 1, 0, 0}},
+    {GROUP_2, PIN_4, {0, 1, 1, 1}},
 };
 static const led_info hot_map[3]={
-    {GROUP_1, PIN_7, {0, 0, 1, 1}},
-    {GROUP_1, PIN_6, {0, 1, 0, 0}},
-    {GROUP_2, PIN_0, {0, 0, 1, 0}},
+    {GROUP_1, PIN_7, {0, 0, 0, 1}},
+    {GROUP_1, PIN_5, {0, 1, 0, 0}},
+    {GROUP_1, PIN_6, {0, 1, 1, 1}},
 };
 static const led_info air_map[3]={
-    {GROUP_0, PIN_3, {0, 0, 1, 1}},
-    {GROUP_0, PIN_2, {0, 1, 0, 0}},
-    {GROUP_0, PIN_1, {0, 0, 1, 0}},
+    {GROUP_0, PIN_3, {0, 0, 0, 1}},
+    {GROUP_0, PIN_1, {0, 1, 0, 0}},
+    {GROUP_0, PIN_2, {0, 1, 1, 1}},
 };
 
 /* Functions ------------------------------------------------------------------*/
@@ -181,13 +181,13 @@ static void timer_low_handle(struct tk_timer *timer)
 
 static u8 low_power_read(void)
 {
-    // u16 adc_ref = get_adc_result(ADC_4);
-    // print_hex(&adc_ref, 2);
+    u16 adc_ref = get_adc_result(ADC_4);
+    print_hex(&adc_ref, 2);
 
-    // if (adc_ref <= 220/2)
-    // {
-    //     return 1;
-    // }
+    if (adc_ref <= 220/2)
+    {
+        return 1;
+    }
 
     return 0;
 }
@@ -348,7 +348,7 @@ void remote_power_light(u8 level)
     }
 }
 
-void power_remote_post(void)
+static void power_remote_post(void)
 {
     if (rmt_params.sleep == 1 && rmt_params.power == 1)
     {
@@ -496,19 +496,19 @@ static uint8_t common_btn_read(void *arg)
     switch (btn->id)
     {
         case POWER_ID:
-            value = gpio_read(GROUP_3, PIN_2);
-            break;
-
-        case TIMER_ID:
             value = gpio_read(GROUP_3, PIN_3);
             break;
 
-        case MOTOR_ID:
+        case TIMER_ID:
             value = gpio_read(GROUP_3, PIN_4);
             break;
 
-        case HOT_ID:
+        case MOTOR_ID:
             value = gpio_read(GROUP_3, PIN_7);
+            break;
+
+        case HOT_ID:
+            value = gpio_read(GROUP_3, PIN_2);
             break;
 
         case AIR_ID:
@@ -666,7 +666,7 @@ void remote_user_init(void)
         user_button[i].long_press_start_tick = FLEX_MS_TO_SCAN_CNT(3000);
         user_button[i].long_hold_start_tick = FLEX_MS_TO_SCAN_CNT(4500);
 
-        // button_register(&user_button[i]);
+        button_register(&user_button[i]);
     }
 
     soft_timer_register(&(low_timer), timer_low_handle);

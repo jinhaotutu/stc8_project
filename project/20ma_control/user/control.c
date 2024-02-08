@@ -74,6 +74,9 @@ typedef struct control_info
     uint8_t power_cnt;
     uint8_t mp_cnt;
 
+    uint8_t mode;
+    uint8_t level;
+
     uint8_t id[8];
 }control_info;
 
@@ -86,10 +89,10 @@ static struct tk_timer mp_timer;
 static control_info ctl_params={0};
 static rf_info rf_params={0};
 static const u16 mode_pwm_map[4][4]={
-    {0, (MOTOR_PERIOD_US/2), (MOTOR_PERIOD_US*2/3), MOTOR_PERIOD_US},
-    {0, (HOT_PERIOD_US/2), (HOT_PERIOD_US*3/4), HOT_PERIOD_US},
-    {0, (AIR_PERIOD_US/2), (AIR_PERIOD_US*2/3), AIR_PERIOD_US},
-    {0, (BEEP_PERIOD_US/2), (BEEP_PERIOD_US*2/3), BEEP_PERIOD_US},
+    {1, (MOTOR_PERIOD_US/2), (MOTOR_PERIOD_US*2/3), MOTOR_PERIOD_US},
+    {1, (HOT_PERIOD_US/2), (HOT_PERIOD_US*3/4), HOT_PERIOD_US},
+    {1, (AIR_PERIOD_US/2), (AIR_PERIOD_US*2/3), AIR_PERIOD_US},
+    {1, (BEEP_PERIOD_US/2), (BEEP_PERIOD_US*2/3), BEEP_PERIOD_US},
 };
 
 /* Functions ------------------------------------------------------------------*/
@@ -113,13 +116,13 @@ static void motor_init(void)
     gpio_write(GROUP_1, PIN_2, 0);
 
     pwm_hw_init(PWM_7, BEEP_PERIOD_US);
-    pwm_change_duty(PWM_7, 0);
+    pwm_change_duty(PWM_7, 1);
 }
 
 static void hot_init(void)
 {
     pwm_hw_init(PWM_6, HOT_PERIOD_US);
-    pwm_change_duty(PWM_6, 0);
+    pwm_change_duty(PWM_6, 1);
 }
 
 static void air_init(void)
@@ -163,8 +166,9 @@ static void rf_init(void)
 
 static u8 calc_crc(u8 *buf, u16 len)
 {
-    u16 i = 0;
-    u16 crc = 0;
+    static u16 i = 0;
+    static u16 crc = 0;
+    crc = 0;
     for (i=0;i<len;i++){
         crc += buf[i];
     }
@@ -192,7 +196,7 @@ static u8 rf_data_parse(uint8_t *mode, uint8_t *level)
 
     // print_str("head\r\n");
 
-    crc = calc_crc(rf_params.buf.key, 3);//rf_params.buf.key[0]+rf_params.buf.key[1]+rf_params.buf.key[2];
+    crc = rf_params.buf.key[0]+rf_params.buf.key[1]+rf_params.buf.key[2];
     if (crc != rf_params.buf.key[3])
     {
         print_str("crc ckeck error\n");
@@ -201,27 +205,29 @@ static u8 rf_data_parse(uint8_t *mode, uint8_t *level)
 
     // print_str("crc\r\n");
 
-    if (rf_params.buf.key[1] == MATCH && rf_params.buf.key[2] == MATCH_L)
-    {
-        *mode = MATCH;
-        *level = MATCH_L;
-        return *mode;
-    }
-    else
-    {
-        for (crc=0;crc<7;crc++)
-        {
-            if (ctl_params.id[crc] != rf_params.buf.id[crc])
-            {
-                print_str("rf id not path\n");
-                return UNKOWN;
-            }
-            else
-            {
-                // print_str("rf id same\n");
-            }
-        }
-    }
+    // if (rf_params.buf.key[1] == MATCH && rf_params.buf.key[2] == MATCH_L)
+    // {
+    //     // *mode = MATCH;
+    //     // *level = MATCH_L;
+    //     ctl_params.mode = MATCH;
+    //     ctl_params.level = MATCH_L;
+    //     return ctl_params.mode;
+    // }
+    // else
+    // {
+    //     for (crc=0;crc<7;crc++)
+    //     {
+    //         if (ctl_params.id[crc] != rf_params.buf.id[crc])
+    //         {
+    //             print_str("rf id not path\n");
+    //             return UNKOWN;
+    //         }
+    //         else
+    //         {
+    //             // print_str("rf id same\n");
+    //         }
+    //     }
+    // }
 
     // print_str("id\r\n");
 
@@ -231,10 +237,16 @@ static u8 rf_data_parse(uint8_t *mode, uint8_t *level)
         return UNKOWN;
     }
 
-    *mode = rf_params.buf.key[1];
-    *level = rf_params.buf.key[2];
+    // *mode = rf_params.buf.key[1];
+    // *level = rf_params.buf.key[2];
 
-    return *mode;
+    ctl_params.mode = rf_params.buf.key[1];
+    ctl_params.level = rf_params.buf.key[2];
+
+    print_hex(&ctl_params.mode, 1);
+    print_hex(&ctl_params.level, 1);
+
+    return ctl_params.mode;
 }
 
 static void timer_motor_handle(struct tk_timer *timer)
@@ -350,11 +362,11 @@ static void motor_change(u8 level)
     {
         // pwm_change_duty(PWM_1, 0);
         // pwm_change_duty(PWM_2, 0);
-        gpio_write(GROUP_1, PIN_0, 1);
+        gpio_write(GROUP_1, PIN_0, 0);
         gpio_write(GROUP_1, PIN_2, 0);
 
         ctl_params.motor_cnt = 0;
-        // soft_timer_stop(&(motor_timer));
+        soft_timer_stop(&(motor_timer));
     }
     else
     {
@@ -364,7 +376,7 @@ static void motor_change(u8 level)
         gpio_write(GROUP_1, PIN_2, 0);
 
         ctl_params.motor_cnt = 0;
-        soft_timer_start(&(motor_timer), TIMER_MODE_LOOP, 2000);
+        soft_timer_start(&(motor_timer), TIMER_MODE_LOOP, 30000);
     }
 #endif
 }
@@ -397,6 +409,8 @@ static void hot_change(u8 level)
     }
     else
     {}
+
+    print_hex(&level,1);
 
     print_str("hot level\r\n");
     pwm_change_duty(PWM_6, mode_pwm_map[1][level]);
@@ -556,7 +570,7 @@ static void timer_mp_handle(struct tk_timer *timer)
         // pwm_change_duty(PWM_2, 0);
         gpio_write(GROUP_1, PIN_0, 0);
         gpio_write(GROUP_1, PIN_2, 0);
-        pwm_change_duty(PWM_7, 0);
+        pwm_change_duty(PWM_7, 1);
         soft_timer_stop(&mp_timer);
     }
 }
@@ -667,6 +681,8 @@ static void match_id(u8 level)
         write_control_id();
 
         print_hex(ctl_params.id, 8);
+
+        soft_timer_start(&mp_timer, TIMER_MODE_LOOP, 200);
     }
 }
 
@@ -760,6 +776,7 @@ static void write_control_params(void)
     if (0 != e2prom_write(CONTROL_PARAMS_ADDR, e2_buf, 6))
     {
         print_str("write data error\n");
+        return;
     }
 
     print_str("write data succeed\n");
@@ -846,7 +863,7 @@ void control_loop(void)
         }
         else
         {
-            change_mode_level(mode, level);
+            change_mode_level(ctl_params.mode, ctl_params.level);
         }
 
         rf_params.recv_flag = 0;

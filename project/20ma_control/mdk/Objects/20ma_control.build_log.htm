@@ -5,7 +5,7 @@
 <h2>Tool Versions:</h2>
 IDE-Version: ¦ÌVision V5.27.1.0
 Copyright (C) 2019 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: hu jinhao, tuu, LIC=6XTQ1-CZPZD-5L7C8-36E9N-SP41Q-4NZ0F
+License Information: hu jinhao, tuu, LIC=MPYH9-44DP6-NYTV5-GRL4Z-PR17V-8NX12
  
 Tool Versions:
 Toolchain:       PK51 Prof. Developers Kit  Version: 9.60.0.0
@@ -22,16 +22,18 @@ Dialog DLL:      TP51.DLL V2.60.0.0
  
 <h2>Project:</h2>
 C:\Users\jinhao\Desktop\data\new_prj\stc8_project\stc8_project\project\20ma_control\mdk\20ma_control.uvproj
-Project File Date:  03/26/2021
+Project File Date:  03/28/2021
 
 <h2>Output:</h2>
 Build target 'Target 1'
 compiling control.c...
-..\user\control.c(240): warning C280: 'timer': unreferenced local variable
-..\user\control.c(409): warning C280: 'timer': unreferenced local variable
-..\user\control.c(515): warning C280: 'timer': unreferenced local variable
+..\user\control.c(179): warning C280: 'mode': unreferenced local variable
+..\user\control.c(179): warning C280: 'level': unreferenced local variable
+..\user\control.c(252): warning C280: 'timer': unreferenced local variable
+..\user\control.c(423): warning C280: 'timer': unreferenced local variable
 ..\user\control.c(529): warning C280: 'timer': unreferenced local variable
-..\user\control.c(601): warning C280: 'timer': unreferenced local variable
+..\user\control.c(543): warning C280: 'timer': unreferenced local variable
+..\user\control.c(615): warning C280: 'timer': unreferenced local variable
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?READ_CHIP_ID?CONTROL
@@ -49,9 +51,9 @@ linking...
     SEGMENT: ?PR?_TK_TIMER_GET_MODE?SOFT_TIMER
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_TK_TIMER_GET_STATE?SOFT_TIMER
-Program Size: data=9.1 xdata=367 code=11964
+Program Size: data=9.1 xdata=576 code=16210
 creating hex file from ".\Objects\20ma_control"...
-".\Objects\20ma_control" - 0 Error(s), 13 Warning(s).
+".\Objects\20ma_control" - 0 Error(s), 15 Warning(s).
 Build Time Elapsed:  00:00:01
 </pre>
 </body>

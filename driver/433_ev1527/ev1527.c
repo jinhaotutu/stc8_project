@@ -231,7 +231,7 @@ static u8 ev1527_encode(void)
         ev_post.buf.bit_cnt = 0;
     }
 
-    if (ev_post.loop_cnt >= 3)
+    if (ev_post.loop_cnt >= 4)
     {
         ev_post.busy = 0;
         ev_post.stop();

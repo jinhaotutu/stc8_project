@@ -1,0 +1,16 @@
+".\Objects\STARTUP.obj",
+".\Objects\user_main.obj",
+".\Objects\remote.obj",
+".\Objects\e2prom.obj",
+".\Objects\gpio.obj",
+".\Objects\hw_timer.obj",
+".\Objects\uart.obj",
+".\Objects\rcc.obj",
+".\Objects\adc.obj",
+".\Objects\sleep.obj",
+".\Objects\ev1527.obj",
+".\Objects\soft_timer.obj",
+".\Objects\button.obj",
+".\Objects\main.obj" 
+TO ".\Objects\20ma_remote" 
+PRINT(".\Listings\20ma_remote.m51") RAMSIZE(256) 

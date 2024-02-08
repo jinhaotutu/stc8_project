@@ -33,10 +33,8 @@ static struct tk_timer timer_log;
 
 /* Functions ------------------------------------------------------------------*/
 void rf_post(u8 mode, u8 level);
-void power_remote_post(void);
 static void timer_log_handle(struct tk_timer *timer)
 {
-    power_remote_post();
     print_str("system is runing\r\n");
 }
 

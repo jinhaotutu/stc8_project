@@ -21,16 +21,14 @@ Target DLL:      STCMON51.DLL V1, 0, 11, 0
 Dialog DLL:      TP51.DLL V2.60.0.0
  
 <h2>Project:</h2>
-C:\Users\jinhao\Desktop\data\new_prj\stc8_project\stc8_project\project\20ma_remote\mdk\20ma_remote.uvproj
+C:\Users\jinhao\Desktop\data\new_prj\stc8_project\stc8_project\project\20ma_remote - ¸±±¾\mdk\20ma_remote.uvproj
 Project File Date:  03/28/2021
 
 <h2>Output:</h2>
 Build target 'Target 1'
-compiling user_main.c...
-..\user\user_main.c(37): warning C280: 'timer': unreferenced local variable
-..\user\user_main.c(68): warning C280: 'p': unreferenced local variable
 compiling remote.c...
 ..\user\remote.c(160): warning C280: 'timer': unreferenced local variable
+..\user\remote.c(185): warning C182: pointer to different objects
 ..\user\remote.c(595): warning C280: 'timer': unreferenced local variable
 ..\user\remote.c(604): warning C280: 'timer': unreferenced local variable
 linking...
@@ -38,8 +36,6 @@ linking...
     SEGMENT: ?PR?E2PROM_HW_INIT?E2PROM
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_RCC_HW_INIT?RCC
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?_GET_ADC_RESULT?ADC
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?SYS_ENTER_SLEEP?SLEEP
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
@@ -52,12 +48,10 @@ linking...
     SEGMENT: ?PR?_TK_TIMER_GET_MODE?SOFT_TIMER
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_TK_TIMER_GET_STATE?SOFT_TIMER
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?_BUTTON_REGISTER?BUTTON
-Program Size: data=9.1 xdata=727 code=18524
+Program Size: data=9.1 xdata=729 code=18610
 creating hex file from ".\Objects\20ma_remote"...
-".\Objects\20ma_remote" - 0 Error(s), 15 Warning(s).
-Build Time Elapsed:  00:00:00
+".\Objects\20ma_remote" - 0 Error(s), 12 Warning(s).
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
